@@ -2,7 +2,6 @@ import argparse
 import collections
 import getpass
 import hashlib
-import json
 import os
 import pickle
 import requests
@@ -1126,12 +1125,18 @@ class webull :
             raise ValueError('Must provide a stock symbol or a stock id')
         return requests.get(self._urls.analysis_shortinterest(tId), headers=headers, timeout=self.timeout).json()
 
-    def get_financials(self, stock=None):
+    def get_financials(self, stock=None, tId=None):
         '''
         get financials info and returns a dict of financial info
         '''
         headers = self.build_req_headers()
-        return requests.get(self._urls.fundamentals(self.get_ticker(stock)), headers=headers, timeout=self.timeout).json()
+        if not tId is None:
+            pass
+        elif not stock is None:
+            tId = self.get_ticker(stock)
+        else:
+            raise ValueError('Must provide a stock symbol or a stock id')
+        return requests.get(self._urls.fundamentals(tId), headers=headers, timeout=self.timeout).json()
 
     def get_news(self, stock=None, tId=None, Id=0, items=20):
         '''
